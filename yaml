@@ -1,0 +1,39 @@
+name: Python CI/CD Amaliyot
+
+# Qachon ishga tushishi: main branchga push bo'lganda
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # 1-VAZIFA: CI (Kodni tekshirish va test qilish)
+  test-qilish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repozitoriyni yuklab olish
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 ni o'rnatish
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Pytest kutubxonasini o'rnatish
+        run: pip install pytest
+
+      - name: Testlarni ishga tushirish
+        run: pytest
+
+  # 2-VAZIFA: CD (Test muvaffaqiyatli o'tsa, fayl yaratish/deploy simulyatsiyasi)
+  deploy-qilish:
+    needs: test-qilish  # Faqat test-qilish muvaffaqiyatli o'tsagina ishlaydi!
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Serverga yuklash jarayoni
+        run: |
+          echo "Barcha testlar muvaffaqiyatli o'tdi!"
+          echo "Dastur ishlab chiqarish (production) serveriga joylandi."
